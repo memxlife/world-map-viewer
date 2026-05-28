@@ -103,14 +103,6 @@
             </select>
           </label>
           <label class="field">
-            <span>Point Display</span>
-            <select id="pointDisplay">
-              <option value="both">Anchors + boundaries</option>
-              <option value="anchors">Anchors only</option>
-              <option value="boundaries">Boundaries only</option>
-            </select>
-          </label>
-          <label class="field">
             <span>Boundary Result</span>
             <select id="boundarySource">
               <option value="all">All boundary results</option>
@@ -125,12 +117,14 @@
 
           <aside class="result-side">
             <section class="checks">
+              <label><input id="showAnchors" type="checkbox" checked /> Anchor points</label>
+              <label><input id="showMeshes" type="checkbox" checked /> Surfaces / meshes</label>
+              <label><input id="showBoundaries" type="checkbox" /> Boundary points / lines</label>
+              <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
               <label><input id="showTrajectory" type="checkbox" checked /> Camera trajectory</label>
               <label><input id="showAxes" type="checkbox" checked /> Axes</label>
               <label><input id="showGrowthLinks" type="checkbox" /> Growth links</label>
               <label><input id="showSameSurface" type="checkbox" /> Same-surface hypotheses</label>
-              <label><input id="showBoundaries" type="checkbox" /> Boundary hypotheses</label>
-              <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
             </section>
 
             <section class="metrics">

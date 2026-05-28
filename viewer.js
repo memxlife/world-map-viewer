@@ -26,8 +26,9 @@ const els = {
   pointSize: document.getElementById("pointSize"),
   pointSizeLabel: document.getElementById("pointSizeLabel"),
   colorMode: document.getElementById("colorMode"),
-  pointDisplay: document.getElementById("pointDisplay"),
   boundarySource: document.getElementById("boundarySource"),
+  showAnchors: document.getElementById("showAnchors"),
+  showMeshes: document.getElementById("showMeshes"),
   showTrajectory: document.getElementById("showTrajectory"),
   showAxes: document.getElementById("showAxes"),
   showGrowthLinks: document.getElementById("showGrowthLinks"),
@@ -211,7 +212,7 @@ async function loadWorldMap(path) {
   worldMap = data;
   setResultTimelineToEnd();
   updateBoundarySourceOptions();
-  updatePointDisplayOptions();
+  updateLayerControls();
   buildLegend();
   rebuildPoints();
   fitView();
@@ -347,33 +348,46 @@ function updateBoundarySourceOptions() {
   els.boundarySource.value = sources.includes(current) ? current : "all";
 }
 
-function updatePointDisplayOptions() {
-  const current = els.pointDisplay.value || params().get("points") || "both";
+function applyLegacyPointMode(mode) {
+  if (mode === "anchors") {
+    els.showAnchors.checked = true;
+    els.showMeshes.checked = false;
+    els.showBoundaries.checked = false;
+    return;
+  }
+  if (mode === "meshes") {
+    els.showAnchors.checked = false;
+    els.showMeshes.checked = true;
+    els.showBoundaries.checked = false;
+    return;
+  }
+  if (mode === "boundaries") {
+    els.showAnchors.checked = false;
+    els.showMeshes.checked = false;
+    els.showBoundaries.checked = true;
+    return;
+  }
+  if (mode === "both") {
+    els.showAnchors.checked = true;
+    els.showMeshes.checked = true;
+  }
+}
+
+function updateLayerControls() {
   const hasMeshes = Boolean(worldMap?.meshes?.length);
-  const options = hasMeshes
-    ? [
-        ["both", "Anchors + meshes"],
-        ["anchors", "Anchors only"],
-        ["meshes", "Meshes only"],
-      ]
-    : [
-        ["both", "Anchors + boundaries"],
-        ["anchors", "Anchors only"],
-        ["boundaries", "Boundaries only"],
-      ];
-  els.pointDisplay.innerHTML = "";
-  options.forEach(([value, label]) => {
-    const option = document.createElement("option");
-    option.value = value;
-    option.textContent = label;
-    els.pointDisplay.append(option);
-  });
-  els.pointDisplay.value = options.some(([value]) => value === current) ? current : "both";
+  const hasBoundaryVoxels = Boolean(worldMap?.voxels?.some(isBoundaryVoxel));
+  const hasBoundarySegments = Boolean(worldMap?.boundary_segments?.length || worldMap?.hypotheses?.some((h) => h.type === "boundary"));
+  const hasNormals = hasEstimatedNormals();
+  els.showMeshes.disabled = !hasMeshes;
+  els.showBoundaries.disabled = !hasBoundaryVoxels && !hasBoundarySegments;
+  els.showNormals.disabled = !hasNormals;
+  if (!hasMeshes) els.showMeshes.checked = false;
+  if (!hasBoundaryVoxels && !hasBoundarySegments) els.showBoundaries.checked = false;
+  if (!hasNormals) els.showNormals.checked = false;
 }
 
 function showMeshLayer() {
-  const mode = els.pointDisplay.value;
-  return Boolean(worldMap?.meshes?.length) && (mode === "both" || mode === "meshes");
+  return Boolean(worldMap?.meshes?.length) && els.showMeshes.checked;
 }
 
 function hasEstimatedNormals() {
@@ -391,16 +405,14 @@ function hasEstimatedNormals() {
 
 function visibleVoxelsAtFrame(frame) {
   if (!worldMap?.voxels?.length) return [];
-  const mode = els.pointDisplay.value;
   const source = els.boundarySource.value;
   return worldMap.voxels.filter((voxel) => {
     if (voxel.first_seen > frame) return false;
     if (voxel.kind === "poisson_mesh_vertex") return false;
-    if (mode === "meshes") return false;
     const isBoundary = isBoundaryVoxel(voxel);
+    if (!isBoundary && !els.showAnchors.checked) return false;
+    if (isBoundary && !els.showBoundaries.checked) return false;
     if (isBoundary && source !== "all" && boundarySourceId(voxel) !== source) return false;
-    if (mode === "anchors") return !isBoundary;
-    if (mode === "boundaries") return isBoundary;
     return true;
   });
 }
@@ -779,7 +791,10 @@ function updateUrl() {
   next.searchParams.set("benchmark", els.benchmarkPath.value);
   next.searchParams.set("data", els.dataPath.value);
   next.searchParams.set("color", els.colorMode.value);
-  next.searchParams.set("points", els.pointDisplay.value);
+  next.searchParams.delete("points");
+  next.searchParams.set("anchors", els.showAnchors.checked ? "1" : "0");
+  next.searchParams.set("meshes", els.showMeshes.checked ? "1" : "0");
+  next.searchParams.set("boundaryPoints", els.showBoundaries.checked ? "1" : "0");
   next.searchParams.set("boundary", els.boundarySource.value);
   if (els.showNormals.checked) next.searchParams.set("normals", "1");
   else next.searchParams.delete("normals");
@@ -833,7 +848,10 @@ function animate() {
 els.benchmarkPath.value = urlBenchmarkPath();
 els.dataPath.value = urlDataPath();
 if (params().get("color")) els.colorMode.value = params().get("color");
-if (params().get("points")) els.pointDisplay.value = params().get("points");
+if (params().get("points")) applyLegacyPointMode(params().get("points"));
+if (params().get("anchors")) els.showAnchors.checked = params().get("anchors") === "1";
+if (params().get("meshes")) els.showMeshes.checked = params().get("meshes") === "1";
+if (params().get("boundaryPoints")) els.showBoundaries.checked = params().get("boundaryPoints") === "1";
 if (params().get("boundary")) els.boundarySource.value = params().get("boundary");
 if (params().get("normals") === "1") els.showNormals.checked = true;
 
@@ -856,8 +874,12 @@ els.colorMode.addEventListener("change", () => {
   rebuildPoints();
   updateUrl();
 });
-els.pointDisplay.addEventListener("change", () => {
+els.showAnchors.addEventListener("change", () => {
   rebuildPoints();
+  updateUrl();
+});
+els.showMeshes.addEventListener("change", () => {
+  buildHypotheses();
   updateUrl();
 });
 els.boundarySource.addEventListener("change", () => {
@@ -869,7 +891,10 @@ els.showTrajectory.addEventListener("change", () => {
 });
 els.showGrowthLinks.addEventListener("change", buildHypotheses);
 els.showSameSurface.addEventListener("change", buildHypotheses);
-els.showBoundaries.addEventListener("change", buildHypotheses);
+els.showBoundaries.addEventListener("change", () => {
+  rebuildPoints();
+  updateUrl();
+});
 els.showNormals.addEventListener("change", () => {
   buildHypotheses();
   updateUrl();
