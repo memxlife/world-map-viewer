@@ -4,14 +4,14 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>World Map Viewer</title>
-    <link rel="stylesheet" href="./styles.css?v=91" />
+    <link rel="stylesheet" href="./styles.css?v=92" />
     <script>
       if (window.location.protocol === "file:") {
         const marker = "/EmbodiedAI/";
         const path = window.location.pathname;
         const index = path.indexOf(marker);
         const relativePath = index >= 0 ? path.slice(index + marker.length) : "index.html";
-        const defaultSearch = "?v=91&benchmark=/research-problems/anchor_point_capture/benchmarks/synthetic_two_cube_six_orbit_cross_lines_smooth_dense_horizontal_plus_vertical&color=rgb&points=both&data=/research-problems/poisson_surface_reconstruction/generated/reports/oracle_normals_anchor_capture/poisson_oracle_normals_viewer_world_map.json";
+        const defaultSearch = "?v=92&benchmark=/research-problems/anchor_point_capture/benchmarks/synthetic_two_cube_six_orbit_cross_lines_smooth_dense_horizontal_plus_vertical&color=rgb&anchors=1&meshes=1&boundaryPoints=0&data=/research-problems/poisson_surface_reconstruction/generated/reports/oracle_normals_anchor_capture/poisson_oracle_normals_viewer_world_map.json";
         window.location.replace(`http://127.0.0.1:8830/${relativePath}${window.location.search || defaultSearch}`);
       }
     </script>
@@ -108,6 +108,17 @@
               <option value="all">All boundary results</option>
             </select>
           </label>
+          <fieldset class="field layer-toggles wide-display-field">
+            <legend>Display Layers</legend>
+            <label><input id="showAnchors" type="checkbox" checked /> Anchor points</label>
+            <label><input id="showMeshes" type="checkbox" checked /> Surfaces / meshes</label>
+            <label><input id="showBoundaries" type="checkbox" /> Boundary points / lines</label>
+            <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
+            <label><input id="showTrajectory" type="checkbox" checked /> Camera trajectory</label>
+            <label><input id="showAxes" type="checkbox" checked /> Axes</label>
+            <label><input id="showGrowthLinks" type="checkbox" /> Growth links</label>
+            <label><input id="showSameSurface" type="checkbox" /> Same-surface hypotheses</label>
+          </fieldset>
         </div>
 
         <div class="result-layout">
@@ -116,17 +127,6 @@
           </section>
 
           <aside class="result-side">
-            <section class="checks">
-              <label><input id="showAnchors" type="checkbox" checked /> Anchor points</label>
-              <label><input id="showMeshes" type="checkbox" checked /> Surfaces / meshes</label>
-              <label><input id="showBoundaries" type="checkbox" /> Boundary points / lines</label>
-              <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
-              <label><input id="showTrajectory" type="checkbox" checked /> Camera trajectory</label>
-              <label><input id="showAxes" type="checkbox" checked /> Axes</label>
-              <label><input id="showGrowthLinks" type="checkbox" /> Growth links</label>
-              <label><input id="showSameSurface" type="checkbox" /> Same-surface hypotheses</label>
-            </section>
-
             <section class="metrics">
               <div><span>Voxels</span><strong id="metricVoxels">-</strong></div>
               <div><span>Result Frames</span><strong id="metricResultFrames">-</strong></div>
@@ -146,6 +146,6 @@
       </section>
     </main>
 
-    <script type="module" src="./viewer.js?v=91"></script>
+    <script type="module" src="./viewer.js?v=92"></script>
   </body>
 </html>

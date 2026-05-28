@@ -374,13 +374,16 @@ function applyLegacyPointMode(mode) {
 }
 
 function updateLayerControls() {
+  const hasAnchors = Boolean(worldMap?.voxels?.some((voxel) => voxel.kind !== "poisson_mesh_vertex" && !isBoundaryVoxel(voxel)));
   const hasMeshes = Boolean(worldMap?.meshes?.length);
   const hasBoundaryVoxels = Boolean(worldMap?.voxels?.some(isBoundaryVoxel));
   const hasBoundarySegments = Boolean(worldMap?.boundary_segments?.length || worldMap?.hypotheses?.some((h) => h.type === "boundary"));
   const hasNormals = hasEstimatedNormals();
+  els.showAnchors.disabled = !hasAnchors;
   els.showMeshes.disabled = !hasMeshes;
   els.showBoundaries.disabled = !hasBoundaryVoxels && !hasBoundarySegments;
   els.showNormals.disabled = !hasNormals;
+  if (!hasAnchors) els.showAnchors.checked = false;
   if (!hasMeshes) els.showMeshes.checked = false;
   if (!hasBoundaryVoxels && !hasBoundarySegments) els.showBoundaries.checked = false;
   if (!hasNormals) els.showNormals.checked = false;
@@ -796,6 +799,10 @@ function updateUrl() {
   next.searchParams.set("meshes", els.showMeshes.checked ? "1" : "0");
   next.searchParams.set("boundaryPoints", els.showBoundaries.checked ? "1" : "0");
   next.searchParams.set("boundary", els.boundarySource.value);
+  next.searchParams.set("trajectory", els.showTrajectory.checked ? "1" : "0");
+  next.searchParams.set("axes", els.showAxes.checked ? "1" : "0");
+  next.searchParams.set("growthLinks", els.showGrowthLinks.checked ? "1" : "0");
+  next.searchParams.set("sameSurface", els.showSameSurface.checked ? "1" : "0");
   if (els.showNormals.checked) next.searchParams.set("normals", "1");
   else next.searchParams.delete("normals");
   window.history.replaceState({}, "", next);
@@ -854,6 +861,10 @@ if (params().get("meshes")) els.showMeshes.checked = params().get("meshes") === 
 if (params().get("boundaryPoints")) els.showBoundaries.checked = params().get("boundaryPoints") === "1";
 if (params().get("boundary")) els.boundarySource.value = params().get("boundary");
 if (params().get("normals") === "1") els.showNormals.checked = true;
+if (params().get("trajectory")) els.showTrajectory.checked = params().get("trajectory") === "1";
+if (params().get("axes")) els.showAxes.checked = params().get("axes") === "1";
+if (params().get("growthLinks")) els.showGrowthLinks.checked = params().get("growthLinks") === "1";
+if (params().get("sameSurface")) els.showSameSurface.checked = params().get("sameSurface") === "1";
 
 els.benchmarkPreset.addEventListener("change", () => {
   if (els.benchmarkPreset.value !== "__custom__") els.benchmarkPath.value = els.benchmarkPreset.value;
@@ -888,9 +899,20 @@ els.boundarySource.addEventListener("change", () => {
 });
 els.showTrajectory.addEventListener("change", () => {
   if (trajectory) trajectory.visible = els.showTrajectory.checked;
+  updateUrl();
 });
-els.showGrowthLinks.addEventListener("change", buildHypotheses);
-els.showSameSurface.addEventListener("change", buildHypotheses);
+els.showAxes.addEventListener("change", () => {
+  axes.visible = els.showAxes.checked;
+  updateUrl();
+});
+els.showGrowthLinks.addEventListener("change", () => {
+  buildHypotheses();
+  updateUrl();
+});
+els.showSameSurface.addEventListener("change", () => {
+  buildHypotheses();
+  updateUrl();
+});
 els.showBoundaries.addEventListener("change", () => {
   rebuildPoints();
   updateUrl();
