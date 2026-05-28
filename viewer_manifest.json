@@ -1,0 +1,18 @@
+{
+  "benchmarks": [
+    {
+      "name": "anchor capture cross-line benchmark",
+      "path": "/research-problems/anchor_point_capture/benchmarks/synthetic_two_cube_six_orbit_cross_lines_smooth_dense_horizontal_plus_vertical"
+    }
+  ],
+  "results": [
+    {
+      "name": "Poisson reconstruction with oracle normals",
+      "path": "/research-problems/poisson_surface_reconstruction/generated/reports/oracle_normals_anchor_capture/poisson_oracle_normals_viewer_world_map.json"
+    },
+    {
+      "name": "estimated anchor normals",
+      "path": "/research-problems/anchor_point_capture/results/oriented_normal_dense240/normal_estimation_component_p5_r028_c060_shared3/oriented_anchor_normals_world_map.json"
+    }
+  ]
+}

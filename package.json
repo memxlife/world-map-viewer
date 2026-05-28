@@ -1,0 +1,29 @@
+{
+  "name": "world-map-viewer",
+  "version": "0.1.0",
+  "description": "Standalone viewer for egocentric 3D benchmarks and reconstruction results.",
+  "type": "module",
+  "bin": {
+    "world-map-viewer": "./bin/world-map-viewer.mjs"
+  },
+  "files": [
+    "bin/",
+    "index.html",
+    "styles.css",
+    "viewer.js",
+    "viewer_manifest.json",
+    "README.md"
+  ],
+  "scripts": {
+    "start": "node ./bin/world-map-viewer.mjs",
+    "dev": "vite --config vite.config.mjs",
+    "preview": "node ./bin/world-map-viewer.mjs --root ../../../../.. --host 127.0.0.1 --port 8830",
+    "check": "node --check viewer.js && node --check bin/world-map-viewer.mjs"
+  },
+  "dependencies": {
+    "three": "^0.164.1"
+  },
+  "devDependencies": {
+    "vite": "^8.0.14"
+  }
+}
