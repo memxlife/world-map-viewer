@@ -11,8 +11,28 @@
       "path": "/research-problems/poisson_surface_reconstruction/generated/reports/oracle_normals_anchor_capture/poisson_oracle_normals_viewer_world_map.json"
     },
     {
-      "name": "estimated anchor normals",
-      "path": "/research-problems/anchor_point_capture/results/oriented_normal_dense240/normal_estimation_component_p5_r028_c060_shared3/oriented_anchor_normals_world_map.json"
+      "name": "clean anchors with estimated normals",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/normal_estimation_quality_gated_v1/oriented_anchor_normals_world_map.json"
+    },
+    {
+      "name": "Poisson reconstruction from clean estimated normals",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/poisson_from_quality_gated_normals_v1/poisson_quality_gated_normals_viewer_world_map.json"
+    },
+    {
+      "name": "clean anchors with relaxed Poisson normals",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/normal_estimation_poisson_relaxed_v1/oriented_anchor_normals_world_map.json"
+    },
+    {
+      "name": "clean anchors with normal kind labels",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/normal_estimation_poisson_relaxed_v1/oriented_anchor_normals_with_kind_world_map.json"
+    },
+    {
+      "name": "Poisson reconstruction from relaxed normals",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/poisson_from_poisson_relaxed_normals_v1/poisson_relaxed_normals_viewer_world_map.json"
+    },
+    {
+      "name": "Poisson reconstruction from single-surface normals",
+      "path": "/research-problems/anchor_point_capture/results/clean_anchor_normal_estimation_v1/poisson_from_single_surface_normals_v1/poisson_single_surface_normals_viewer_world_map.json"
     }
   ]
 }
