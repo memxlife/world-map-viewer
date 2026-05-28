@@ -68,6 +68,9 @@ http://127.0.0.1:8830/
 - Trackpad/mouse wheel over the slider: scrub frame growth.
 - Arrow keys: step frames.
 - Color modes: remembered RGB, face/object ID, first-seen time.
-- Toggles: camera trajectory and axes.
+- Display layers: independently enable or disable anchor points, surfaces or
+  meshes, boundary points or lines, estimated normals, camera trajectory, axes,
+  growth links, and same-surface hypotheses. The viewer disables a layer toggle
+  when the loaded result does not contain that layer.
 
 The current preset lists are stored in `viewer_manifest.json`.
