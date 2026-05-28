@@ -108,17 +108,6 @@
               <option value="all">All boundary results</option>
             </select>
           </label>
-          <fieldset class="field layer-toggles wide-display-field">
-            <legend>Display Layers</legend>
-            <label><input id="showAnchors" type="checkbox" checked /> Anchor points</label>
-            <label><input id="showMeshes" type="checkbox" checked /> Surfaces / meshes</label>
-            <label><input id="showBoundaries" type="checkbox" /> Boundary points / lines</label>
-            <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
-            <label><input id="showTrajectory" type="checkbox" checked /> Camera trajectory</label>
-            <label><input id="showAxes" type="checkbox" checked /> Axes</label>
-            <label><input id="showGrowthLinks" type="checkbox" /> Growth links</label>
-            <label><input id="showSameSurface" type="checkbox" /> Same-surface hypotheses</label>
-          </fieldset>
         </div>
 
         <div class="result-layout">
@@ -127,6 +116,18 @@
           </section>
 
           <aside class="result-side">
+            <fieldset class="field layer-toggles">
+              <legend>Display Layers</legend>
+              <label><input id="showAnchors" type="checkbox" checked /> Anchor points</label>
+              <label><input id="showMeshes" type="checkbox" checked /> Surfaces / meshes</label>
+              <label><input id="showBoundaries" type="checkbox" /> Boundary points / lines</label>
+              <label><input id="showNormals" type="checkbox" /> Estimated normals</label>
+              <label><input id="showTrajectory" type="checkbox" checked /> Camera trajectory</label>
+              <label><input id="showAxes" type="checkbox" checked /> Axes</label>
+              <label><input id="showGrowthLinks" type="checkbox" /> Growth links</label>
+              <label><input id="showSameSurface" type="checkbox" /> Same-surface hypotheses</label>
+            </fieldset>
+
             <section class="metrics">
               <div><span>Voxels</span><strong id="metricVoxels">-</strong></div>
               <div><span>Result Frames</span><strong id="metricResultFrames">-</strong></div>
